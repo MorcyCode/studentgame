@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GESP Python 一级 2025年3月 编程题讲解</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #5a6778;
+      --line: #dce3eb;
+      --blue: #1f5b89;
+      --teal: #1f8a70;
+      --amber: #f2a93b;
+      --coral: #d85b45;
+      --green-soft: #e6f4ef;
+      --amber-soft: #fff3d8;
+      --coral-soft: #fde8e4;
+      --code-bg: #111827;
+      --code-ink: #e8edf5;
+      --radius: 8px;
+      --shadow: 0 18px 50px rgba(31, 46, 67, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      line-height: 1.75;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 48px 0 34px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 5vw, 52px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 860px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    main {
+      padding: 28px 0 56px;
+    }
+
+    section {
+      margin: 28px 0;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 16px;
+      font-size: 26px;
+      line-height: 1.25;
+    }
+
+    .section-title span {
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    .panel-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .problem-text h4 {
+      margin: 18px 0 8px;
+      font-size: 17px;
+      color: var(--blue);
+    }
+
+    .problem-text h4:first-child {
+      margin-top: 0;
+    }
+
+    .problem-text p {
+      margin: 8px 0;
+    }
+
+    .sample {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .sample pre,
+    pre.code {
+      margin: 0;
+      overflow: auto;
+      border-radius: var(--radius);
+      font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .sample pre {
+      padding: 12px 14px;
+      background: #f5f7fa;
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .sample strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .principle {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .formula {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 12px 0 18px;
+      font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #edf4fb;
+      color: var(--blue);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: #ffffff;
+      font: 600 16px/1.3 Consolas, "Cascadia Mono", monospace;
+    }
+
+    .result-box {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .metric b {
+      display: block;
+      font-size: 24px;
+      line-height: 1.2;
+      color: var(--blue);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .visual {
+      min-height: 280px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+    }
+
+    .visual svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 5px;
+      border-radius: 3px;
+      vertical-align: -1px;
+    }
+
+    .explain-list {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .explain-list li {
+      margin: 6px 0;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    pre.code {
+      padding: 18px;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border: 1px solid #1f2937;
+      box-shadow: var(--shadow);
+    }
+
+    .note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .rounding-control {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 280px;
+    }
+
+    .mono {
+      font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+      font-weight: 700;
+    }
+
+    footer {
+      padding: 24px 0 42px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 880px) {
+      .problem-grid,
+      .principle,
+      .code-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .control-row,
+      .result-box,
+      .sample {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .panel,
+      pre.code {
+        box-shadow: none;
+      }
+
+      input {
+        border-color: #888888;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <h1>GESP Python 一级 2025年3月编程题讲解</h1>
+      <p class="lead">先列出最后两道编程题原题，再用时间轴和数轴展示数学原理，最后给出每一行都有注释的 Python 程序。</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section aria-labelledby="original-title">
+      <h2 id="original-title" class="section-title"><span>1</span>最后两道编程题原题</h2>
+      <div class="problem-grid">
+        <article class="panel problem-text">
+          <div class="panel-head">
+            <h3>3.1 编程题 1：图书馆里的老鼠</h3>
+            <p>时间限制：1.0 s　内存限制：512.0 MB</p>
+          </div>
+          <div class="panel-body">
+            <h4>题目描述</h4>
+            <p>图书馆里有 <var>n</var> 本书，不幸的是，还混入了一只老鼠，老鼠每 <var>x</var> 小时能啃光一本书，假设老鼠在啃光一本书之前，不会啃另一本。请问 <var>y</var> 小时后图书馆里还剩下多少本完整的书。</p>
+
+            <h4>输入格式</h4>
+            <p>三行，第一行一个正整数 <var>n</var>，表示图书馆里书的数量；</p>
+            <p>第二行，一个正整数 <var>x</var>，表示老鼠啃光一本书需要的时间；</p>
+            <p>第三行，一个正整数 <var>y</var>，表示经过的总时间；</p>
+            <p>输入数据保证 <var>y</var> 小时后至少会剩下一本完整的书。</p>
+
+            <h4>输出格式</h4>
+            <p>一行，一个整数，表示 <var>y</var> 小时后图书馆里还剩下多少本完整的书。</p>
+
+            <h4>样例</h4>
+            <div class="sample">
+              <pre><strong>输入样例 1</strong>10
+2
+3</pre>
+              <pre><strong>输出样例 1</strong>8</pre>
+              <pre><strong>输入样例 2</strong>5
+2
+4</pre>
+              <pre><strong>输出样例 2</strong>3</pre>
+            </div>
+
+            <h4>数据范围</h4>
+            <p>对于所有测试点，保证 1 ≤ <var>n</var>, <var>x</var>, <var>y</var> ≤ 1,000，保证 <var>y</var> 小时后至少会剩下一本完整的书。</p>
+          </div>
+        </article>
+
+        <article class="panel problem-text">
+          <div class="panel-head">
+            <h3>3.2 编程题 2：四舍五入</h3>
+            <p>时间限制：1.0 s　内存限制：512.0 MB</p>
+          </div>
+          <div class="panel-body">
+            <h4>题目描述</h4>
+            <p>四舍五入是一种常见的近似计算方法。现在，给定 <var>n</var> 个整数，你需要将每个整数四舍五入到最接近的整十数。例如，43 四舍五入后为 40，58 四舍五入后为 60。</p>
+
+            <h4>输入格式</h4>
+            <p>共 <var>n</var> + 1 行，第一行，一个整数 <var>n</var>，表示接下来输入的整数个数。</p>
+            <p>接下来 <var>n</var> 行，每行一个整数 <var>a<sub>i</sub></var>，表示需要四舍五入的整数。</p>
+
+            <h4>输出格式</h4>
+            <p><var>n</var> 行，每行一个整数，表示每个整数四舍五入后的结果。</p>
+
+            <h4>样例</h4>
+            <div class="sample">
+              <pre><strong>输入样例 1</strong>5
+43
+58
+25
+67
+90</pre>
+              <pre><strong>输出样例 1</strong>40
+60
+30
+70
+90</pre>
+            </div>
+
+            <h4>数据范围</h4>
+            <p>对于所有测试点，保证 1 ≤ <var>n</var> ≤ 100，1 ≤ <var>a<sub>i</sub></var> ≤ 10000。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="math-title">
+      <h2 id="math-title" class="section-title"><span>2</span>数学原理可视化</h2>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h3>图书馆里的老鼠：完整书本要减去“已啃光”和“正在啃”的书</h3>
+          <p>核心是向上取整：只要老鼠碰过一本书，这本书就不再是完整的书。</p>
+        </div>
+        <div class="panel-body principle">
+          <div>
+            <div class="formula">
+              <span class="chip">不完整书本数 = ceil(y / x)</span>
+              <span class="chip">剩余完整书本数 = n - ceil(y / x)</span>
+            </div>
+            <div class="control-row">
+              <label>书本总数 n
+                <input id="mouse-n" type="number" min="1" max="1000" value="10">
+              </label>
+              <label>啃完一本用时 x
+                <input id="mouse-x" type="number" min="1" max="1000" value="2">
+              </label>
+              <label>经过时间 y
+                <input id="mouse-y" type="number" min="1" max="1000" value="3">
+              </label>
+            </div>
+            <ul class="explain-list">
+              <li>如果 <span class="mono">y // x</span> 是已经啃光的本数，<span class="mono">y % x</span> 是还没啃完的剩余时间。</li>
+              <li>当 <span class="mono">y % x &gt; 0</span> 时，老鼠正在啃下一本，这一本也不完整，所以还要再减 1。</li>
+              <li>样例 1：<span class="mono">n=10, x=2, y=3</span>，老鼠碰过第 1、2 本书，剩下 <span class="mono">8</span> 本完整书。</li>
+            </ul>
+            <div class="result-box">
+              <div class="metric"><b id="full-eaten">1</b><span>已啃光</span></div>
+              <div class="metric"><b id="partial-eaten">1</b><span>正在啃</span></div>
+              <div class="metric"><b id="mouse-answer">8</b><span>剩余完整</span></div>
+            </div>
+          </div>
+          <div class="visual">
+            <div id="mouse-visual"></div>
+            <div class="legend">
+              <span><i style="background: var(--coral);"></i>已啃光</span>
+              <span><i style="background: var(--amber);"></i>正在啃</span>
+              <span><i style="background: var(--teal);"></i>完整书</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" style="margin-top:18px;">
+        <div class="panel-head">
+          <h3>四舍五入到整十数：个位小于 5 向下，个位大于等于 5 向上</h3>
+          <p>核心是把分界线放在 5：先加 5，再整除 10，就能自动跨过分界线。</p>
+        </div>
+        <div class="panel-body principle">
+          <div>
+            <div class="formula">
+              <span class="chip">答案 = (x + 5) // 10 * 10</span>
+              <span class="chip">43 → 40，58 → 60，25 → 30</span>
+            </div>
+            <div class="control-row rounding-control">
+              <label>要四舍五入的整数 x
+                <input id="round-x" type="number" min="1" max="10000" value="43">
+              </label>
+            </div>
+            <ul class="explain-list">
+              <li><span class="mono">x + 5</span>：把 5 到 9 的个位推到下一个十位。</li>
+              <li><span class="mono">// 10</span>：去掉个位，得到十位的数量。</li>
+              <li><span class="mono">* 10</span>：再变回整十数。</li>
+            </ul>
+            <div class="result-box">
+              <div class="metric"><b id="ones-digit">3</b><span>个位</span></div>
+              <div class="metric"><b id="round-direction">向下</b><span>方向</span></div>
+              <div class="metric"><b id="round-answer">40</b><span>结果</span></div>
+            </div>
+          </div>
+          <div class="visual">
+            <div id="round-visual"></div>
+            <div class="legend">
+              <span><i style="background: var(--green-soft); border:1px solid var(--teal);"></i>舍到较小整十数</span>
+              <span><i style="background: var(--amber-soft); border:1px solid var(--amber);"></i>入到较大整十数</span>
+              <span><i style="background: var(--blue);"></i>当前数字</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section aria-labelledby="code-title">
+      <h2 id="code-title" class="section-title"><span>3</span>逐行注释程序</h2>
+      <div class="code-grid">
+        <article>
+          <h3>3.1 图书馆里的老鼠</h3>
+          <pre class="code"><code>n = int(input())  # 读入图书馆原来有多少本书
+x = int(input())  # 读入老鼠啃光一本书需要多少小时
+y = int(input())  # 读入已经经过了多少小时
+ans = n - y // x  # 先减去已经被完整啃光的书本数
+if y % x &gt; 0:  # 如果还有不足 x 小时的剩余时间，说明老鼠正在啃下一本
+    ans -= 1  # 正在被啃的这本已经不是完整的书，也要再减掉一本
+print(ans)  # 输出 y 小时后还剩下的完整书本数</code></pre>
+          <p class="note">等价思路：先算 <span class="mono">ceil(y / x)</span> 本书变得不完整，再用 <span class="mono">n</span> 减掉它。</p>
+        </article>
+
+        <article>
+          <h3>3.2 四舍五入</h3>
+          <pre class="code"><code>n = int(input())  # 读入接下来需要处理的整数个数
+for i in range(n):  # 循环 n 次，每次处理一个整数
+    x = int(input())  # 读入当前需要四舍五入的整数
+    ans = (x + 5) // 10 * 10  # 先加 5，再整除 10 后乘 10，得到最接近的整十数
+    print(ans)  # 输出当前整数四舍五入后的结果</code></pre>
+          <p class="note">因为题目保证输入是正整数，所以这个公式可以直接处理所有测试数据。</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    本 HTML 为本地讲解稿，可直接离线打开。
+  </footer>
+
+  <script>
+    const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+    function readNumber(id, fallback, min, max) {
+      const input = document.getElementById(id);
+      const value = Number(input.value);
+      const cleanValue = Number.isFinite(value) ? clamp(Math.trunc(value), min, max) : fallback;
+      input.value = cleanValue;
+      return cleanValue;
+    }
+
+    function renderMouse() {
+      const n = readNumber("mouse-n", 10, 1, 1000);
+      const x = readNumber("mouse-x", 2, 1, 1000);
+      const y = readNumber("mouse-y", 3, 1, 1000);
+      const full = Math.floor(y / x);
+      const partial = y % x > 0 ? 1 : 0;
+      const damaged = Math.min(n, full + partial);
+      const remaining = Math.max(0, n - damaged);
+      const shownBooks = Math.min(n, 20);
+      const segmentCount = Math.max(3, Math.min(8, damaged + 1));
+      const width = 640;
+      const height = 268;
+      const left = 56;
+      const right = 584;
+      const axisY = 72;
+      const segmentWidth = (right - left) / segmentCount;
+      const yPosition = left + Math.min(y / x, segmentCount) * segmentWidth;
+
+      let segments = "";
+      for (let i = 0; i < segmentCount; i += 1) {
+        const start = left + i * segmentWidth;
+        const state = i < full ? "full" : i === full && partial ? "partial" : "safe";
+        const fill = state === "full" ? "#d85b45" : state === "partial" ? "#f2a93b" : "#e6f4ef";
+        const stroke = state === "safe" ? "#1f8a70" : fill;
+        const label = `第${i + 1}本`;
+        segments += `
+          <rect x="${start}" y="44" width="${segmentWidth - 5}" height="56" rx="6" fill="${fill}" stroke="${stroke}" />
+          <text x="${start + segmentWidth / 2 - 2}" y="76" text-anchor="middle" font-size="15" fill="${state === "safe" ? "#1f5b89" : "#ffffff"}" font-weight="700">${label}</text>
+          <text x="${start}" y="124" font-size="13" fill="#5a6778">${i * x}h</text>
+        `;
+      }
+
+      let books = "";
+      for (let i = 0; i < shownBooks; i += 1) {
+        const row = Math.floor(i / 10);
+        const col = i % 10;
+        const bx = 68 + col * 48;
+        const by = 166 + row * 38;
+        const fill = i < full ? "#d85b45" : i < damaged ? "#f2a93b" : "#1f8a70";
+        books += `
+          <rect x="${bx}" y="${by}" width="30" height="28" rx="4" fill="${fill}" />
+          <path d="M${bx + 8} ${by + 4} V${by + 24}" stroke="rgba(255,255,255,.55)" stroke-width="2" />
+        `;
+      }
+
+      const moreLabel = n > shownBooks ? `<text x="548" y="224" font-size="14" fill="#5a6778">另有 ${n - shownBooks} 本未画出</text>` : "";
+      document.getElementById("mouse-visual").innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="老鼠啃书时间轴">
+          <text x="56" y="25" font-size="18" fill="#17202a" font-weight="700">每 ${x} 小时碰到一本书，y=${y} 小时停在蓝线处</text>
+          ${segments}
+          <line x1="${left}" y1="${axisY + 45}" x2="${right}" y2="${axisY + 45}" stroke="#dce3eb" stroke-width="2" />
+          <line x1="${yPosition}" y1="34" x2="${yPosition}" y2="130" stroke="#1f5b89" stroke-width="4" />
+          <text x="${Math.min(yPosition + 8, 560)}" y="41" font-size="14" fill="#1f5b89" font-weight="700">y=${y}h</text>
+          <text x="56" y="152" font-size="16" fill="#17202a" font-weight="700">书本状态</text>
+          ${books}
+          ${moreLabel}
+        </svg>
+      `;
+
+      document.getElementById("full-eaten").textContent = Math.min(full, n);
+      document.getElementById("partial-eaten").textContent = partial && damaged <= n ? 1 : 0;
+      document.getElementById("mouse-answer").textContent = remaining;
+    }
+
+    function renderRound() {
+      const x = readNumber("round-x", 43, 1, 10000);
+      const answer = Math.floor((x + 5) / 10) * 10;
+      const lower = Math.floor(x / 10) * 10;
+      const upper = lower + 10;
+      const midpoint = lower + 5;
+      const ones = x % 10;
+      const direction = ones < 5 ? "向下" : "向上";
+      const start = lower;
+      const end = upper;
+      const width = 640;
+      const height = 250;
+      const left = 64;
+      const right = 576;
+      const scale = (value) => left + ((value - start) / (end - start)) * (right - left);
+      const xPoint = clamp(scale(x), left, right);
+      const midPoint = scale(midpoint);
+
+      document.getElementById("round-visual").innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="四舍五入数轴">
+          <text x="56" y="28" font-size="18" fill="#17202a" font-weight="700">当前数字 ${x} 位于 ${lower} 和 ${upper} 之间</text>
+          <rect x="${left}" y="76" width="${midPoint - left}" height="44" rx="6" fill="#e6f4ef" stroke="#1f8a70" />
+          <rect x="${midPoint}" y="76" width="${right - midPoint}" height="44" rx="6" fill="#fff3d8" stroke="#f2a93b" />
+          <line x1="${left}" y1="144" x2="${right}" y2="144" stroke="#17202a" stroke-width="3" />
+          <line x1="${left}" y1="134" x2="${left}" y2="154" stroke="#17202a" stroke-width="3" />
+          <line x1="${midPoint}" y1="130" x2="${midPoint}" y2="158" stroke="#d85b45" stroke-width="3" />
+          <line x1="${right}" y1="134" x2="${right}" y2="154" stroke="#17202a" stroke-width="3" />
+          <circle cx="${xPoint}" cy="144" r="10" fill="#1f5b89" />
+          <line x1="${xPoint}" y1="144" x2="${xPoint}" y2="62" stroke="#1f5b89" stroke-width="3" />
+          <text x="${left}" y="180" text-anchor="middle" font-size="16" fill="#17202a" font-weight="700">${lower}</text>
+          <text x="${midPoint}" y="180" text-anchor="middle" font-size="16" fill="#d85b45" font-weight="700">${midpoint}</text>
+          <text x="${right}" y="180" text-anchor="middle" font-size="16" fill="#17202a" font-weight="700">${upper}</text>
+          <text x="${xPoint}" y="56" text-anchor="middle" font-size="16" fill="#1f5b89" font-weight="700">x=${x}</text>
+          <text x="${left + 92}" y="104" text-anchor="middle" font-size="14" fill="#1f8a70" font-weight="700">个位 0-4：舍</text>
+          <text x="${right - 92}" y="104" text-anchor="middle" font-size="14" fill="#9a650c" font-weight="700">个位 5-9：入</text>
+          <text x="56" y="226" font-size="17" fill="#17202a" font-weight="700">计算：(${x} + 5) // 10 * 10 = ${answer}</text>
+        </svg>
+      `;
+
+      document.getElementById("ones-digit").textContent = ones;
+      document.getElementById("round-direction").textContent = direction;
+      document.getElementById("round-answer").textContent = answer;
+    }
+
+    ["mouse-n", "mouse-x", "mouse-y"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", renderMouse);
+    });
+
+    document.getElementById("round-x").addEventListener("input", renderRound);
+    renderMouse();
+    renderRound();
+  </script>
+</body>
+</html>
