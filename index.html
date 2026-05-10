@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>世界穿越生存</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="game-shell">
+      <canvas id="game-canvas" aria-label="世界穿越生存游戏画面"></canvas>
+
+      <section id="hud" class="hud is-map">
+        <div class="status-stack">
+          <div class="panel status-panel">
+            <div class="status-row">
+              <span class="label">生命</span>
+              <div class="meter" aria-label="生命值">
+                <div id="health-bar" class="meter-fill health"></div>
+              </div>
+              <strong id="health-text">100</strong>
+            </div>
+            <div class="status-row">
+              <span class="label">环境</span>
+              <span id="climate-text" class="chip neutral">世界地图</span>
+            </div>
+            <div class="status-row">
+              <span class="label">装备</span>
+              <span id="gear-text" class="gear-line">普通衣物</span>
+            </div>
+          </div>
+
+          <div id="inventory-panel" class="panel inventory-panel">
+            <div class="inventory-grid">
+              <span>药材 <strong id="herb-count">0</strong></span>
+              <span>药水 <strong id="potion-count">0</strong></span>
+              <span>仙人掌皮 <strong id="cactus-count">0</strong></span>
+              <span>企鹅皮 <strong id="penguin-count">0</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <button id="map-button" class="icon-button" title="世界地图" aria-label="世界地图">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 18 3 21V6l6-3 6 3 6-3v15l-6 3-6-3Z" />
+              <path d="M9 3v15M15 6v15" />
+            </svg>
+          </button>
+          <button id="restart-button" class="icon-button" title="重新开始" aria-label="重新开始">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7" />
+              <path d="M3 3v6h6" />
+            </svg>
+          </button>
+        </div>
+
+        <div id="place-card" class="panel place-card">
+          <span id="place-title">点击世界地图任意地点</span>
+          <strong id="place-subtitle">选择穿越目的地</strong>
+        </div>
+
+        <div id="prompt" class="prompt"></div>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+
+    <script src="src/game.js"></script>
+  </body>
+</html>
