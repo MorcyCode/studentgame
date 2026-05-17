@@ -1,0 +1,662 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>第 1 课：登上柠檬号启动第一行代码</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f7f9fc;
+  --paper: #ffffff;
+  --paper-soft: #fbfdff;
+  --line: #dbe4f0;
+  --ink: #172033;
+  --muted: #5f6d82;
+  --brand: #f7b500;
+  --brand-dark: #9a5b00;
+  --blue: #2458d3;
+  --green: #0f8f6e;
+  --red: #bf3d2f;
+  --shadow: 0 18px 46px rgba(31, 42, 68, .12);
+  --mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+  --sans: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--sans);
+  background:
+    radial-gradient(circle at 16% 10%, rgba(255, 224, 108, .35), transparent 24%),
+    radial-gradient(circle at 88% 16%, rgba(93, 148, 255, .18), transparent 26%),
+    linear-gradient(180deg, #fffdf5 0%, #f7f9fc 46%, #edf5ff 100%);
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible {
+  outline: 3px solid rgba(36, 88, 211, .28);
+  outline-offset: 2px;
+}
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(230px, 282px) minmax(0, 1fr);
+  transition: grid-template-columns .18s ease;
+}
+.app-shell.rail-collapsed { grid-template-columns: 74px minmax(0, 1fr); }
+.side-rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 18px;
+  background: rgba(255, 255, 255, .92);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+.rail-toggle {
+  position: absolute;
+  right: -15px;
+  top: 80px;
+  width: 30px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(31,42,68,.16);
+  color: #17325c;
+}
+.rail-toggle span { display: inline-block; transition: transform .16s ease; }
+.app-shell.rail-collapsed .rail-toggle span { transform: rotate(180deg); }
+.brand {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+.brand img {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  object-fit: contain;
+}
+.brand strong { display:block; font-size: 17px; line-height: 1.18; }
+.brand span { display:block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.course-meta {
+  border: 1px solid #f4d56f;
+  background: #fff8d9;
+  color: #60410a;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.nav-list {
+  display: grid;
+  gap: 8px;
+  overflow: auto;
+  padding-right: 2px;
+}
+.nav-button {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted);
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  text-align: left;
+  white-space: nowrap;
+}
+.nav-button[aria-current="true"] {
+  background: #fff6d6;
+  border-color: #f3c64b;
+  color: #4b3410;
+  box-shadow: 0 8px 24px rgba(247,181,0,.18);
+}
+.nav-index {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #17325c;
+  display:grid;
+  place-items:center;
+  font-size: 13px;
+  font-weight: 800;
+}
+.nav-label { overflow: hidden; text-overflow: ellipsis; }
+.app-shell.rail-collapsed .brand { grid-template-columns: 48px; }
+.app-shell.rail-collapsed .brand div,
+.app-shell.rail-collapsed .course-meta,
+.app-shell.rail-collapsed .nav-label { display:none; }
+.app-shell.rail-collapsed .nav-button { justify-content:center; padding-left: 7px; padding-right: 7px; }
+.workspace {
+  min-width: 0;
+  padding: 24px clamp(22px, 3vw, 46px) 92px;
+}
+.stage {
+  min-height: min(620px, calc(100vh - 116px));
+  background: rgba(255,255,255,.94);
+  border: 1px solid rgba(255, 190, 75, .38);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  padding: clamp(20px, 2.7vw, 36px);
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+}
+.stage::before {
+  content: "🍋";
+  position: absolute;
+  right: 34px;
+  top: 24px;
+  font-size: 42px;
+  opacity: .25;
+}
+.page {
+  position: relative;
+  animation: rise .18s ease-out;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--brand-dark);
+  font-weight: 900;
+  letter-spacing: 0;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(44px, 5vw, 64px);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+h2 {
+  margin: 0;
+  font-size: clamp(32px, 3.5vw, 44px);
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+.lead {
+  margin: 18px 0 0;
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.42;
+  font-weight: 800;
+  color: var(--blue);
+  max-width: 980px;
+}
+.note {
+  margin: 14px 0 0;
+  font-size: clamp(18px, 1.6vw, 22px);
+  line-height: 1.58;
+  color: var(--muted);
+  max-width: 960px;
+}
+.hero-grid, .two-col {
+  display:grid;
+  grid-template-columns: minmax(0,1fr) minmax(260px, .85fr);
+  gap: 18px;
+  align-items: center;
+}
+.visual-card {
+  min-height: 260px;
+  border: 1px solid #dce7ff;
+  background:
+    linear-gradient(135deg, #f8fbff, #fff8d9);
+  border-radius: 24px;
+  padding: 22px;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+}
+.big-icon { font-size: clamp(52px, 6vw, 84px); line-height: 1; }
+.tag-row { display:flex; flex-wrap:wrap; gap: 10px; margin-top: 18px; }
+.tag {
+  display:inline-flex;
+  align-items:center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #eef4ff;
+  color:#17325c;
+  border:1px solid #d5e2ff;
+  font-weight: 800;
+}
+.flow {
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.flow-node, .step-card, .box-node {
+  background:#f4f8ff;
+  border:1px solid #cfe0ff;
+  border-radius:18px;
+  padding:16px;
+  font-size: 20px;
+  line-height: 1.45;
+}
+.flow-node b, .step-card b, .box-node b { display:block; font-size: 22px; margin-bottom: 6px; color:#17325c; }
+.mindmap {
+  display:grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 18px;
+  align-items: center;
+  margin-top: 20px;
+}
+.mind-center {
+  border-radius: 24px;
+  background:#fff6d6;
+  border:1px solid #f3c64b;
+  padding:22px;
+  font-size: 26px;
+  font-weight: 900;
+  text-align:center;
+}
+.mind-branches { display:grid; gap: 12px; }
+.mind-branch {
+  border: 1px solid #cfe0ff;
+  background: #f4f8ff;
+  border-radius: 18px;
+  padding: 12px 14px;
+  font-size: 20px;
+}
+.table-wrap { overflow:auto; margin-top: 18px; }
+table {
+  width:100%;
+  border-collapse: collapse;
+  font-size: clamp(18px, 1.55vw, 21px);
+}
+th, td {
+  border:1px solid var(--line);
+  padding: 12px 14px;
+  vertical-align: top;
+  text-align:left;
+}
+th { background:#eef4ff; color:#17325c; }
+td code { font-size: .95em; }
+pre {
+  margin: 18px 0 0;
+  background:#132033;
+  color:#e8f1ff;
+  border-radius: 18px;
+  padding: 18px 20px;
+  overflow:auto;
+  max-height: 330px;
+}
+pre code {
+  font-family: var(--mono);
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.62;
+  white-space: pre;
+}
+.terminal {
+  margin-top: 14px;
+  border-radius: 16px;
+  border:1px solid #bfe6d8;
+  background:#eef8f4;
+  color:#17483d;
+  padding:14px 16px;
+  font-family: var(--mono);
+  white-space: pre-wrap;
+  font-size: clamp(17px, 1.45vw, 20px);
+  line-height: 1.55;
+  max-height: 230px;
+  overflow:auto;
+}
+.practice {
+  margin-top: 14px;
+  border-left: 5px solid var(--brand);
+  background:#fffaf0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 20px;
+  line-height: 1.45;
+}
+.input-grid {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+  max-width: 760px;
+}
+.input-grid label { display:grid; gap: 6px; font-weight: 800; color:#17325c; }
+.input-grid input {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 19px;
+}
+.primary-btn, .option-btn {
+  border: 1px solid #d4a800;
+  background:#fff6d6;
+  color:#4b3410;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-weight: 900;
+}
+.primary-btn { margin-top: 14px; }
+.options { display:grid; gap: 10px; margin-top: 18px; max-width: 860px; }
+.option-btn { text-align:left; font-size: 21px; }
+.feedback { min-height: 30px; margin-top: 12px; font-weight: 900; font-size: 21px; }
+.pager {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 20;
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  padding: 8px 12px;
+  border:1px solid rgba(36,88,211,.18);
+  border-radius:999px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 14px 34px rgba(31,42,68,.16);
+}
+.arrow-btn {
+  width: 46px;
+  height: 46px;
+  border:1px solid #cfe0ff;
+  border-radius:50%;
+  background:#f4f8ff;
+  color:#17325c;
+  font-size:28px;
+  line-height:1;
+}
+.arrow-btn:disabled { opacity:.35; cursor:not-allowed; }
+.page-count { min-width: 168px; text-align:center; font-weight:900; color:#17325c; }
+@media (max-width: 900px) {
+  .app-shell, .app-shell.rail-collapsed { grid-template-columns: 1fr; }
+  .side-rail { position:relative; height:auto; border-right:0; border-bottom:1px solid var(--line); }
+  .nav-list { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 250px; }
+  .rail-toggle { right:14px; top:20px; }
+  .app-shell.rail-collapsed .brand div,
+  .app-shell.rail-collapsed .course-meta,
+  .app-shell.rail-collapsed .nav-label { display:block; }
+  .app-shell.rail-collapsed .nav-button { justify-content:flex-start; padding-left:12px; padding-right:12px; }
+  .hero-grid, .two-col, .mindmap, .flow, .input-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="side-rail">
+      <button class="rail-toggle" id="toggleRail" type="button" aria-label="收起左侧导航" aria-expanded="true"><span>&lt;</span></button>
+      <div class="brand">
+        <img src="../../../pic/logo/lemon-mark-transparent.png" alt="柠檬创客 Logo" />
+        <div><strong>柠檬创客</strong><span>Python 星球探险记</span></div>
+      </div>
+      <div class="course-meta">第 1 课<br>01-Python基础入门<br>项目：探险员名片生成器</div>
+      <nav class="nav-list" id="moduleNav" aria-label="模块导航"></nav>
+    </aside>
+    <main class="workspace">
+      <section class="stage" id="stage" aria-live="polite"></section>
+    </main>
+  </div>
+  <div class="pager" aria-label="模块内翻页">
+    <button class="arrow-btn" id="prevPage" type="button" aria-label="上一页">‹</button>
+    <span class="page-count" id="pageCount"></span>
+    <button class="arrow-btn" id="nextPage" type="button" aria-label="下一页">›</button>
+  </div>
+  <script id="lesson-json" type="application/json">{"id": "lesson-001", "courseNo": 1, "title": "登上柠檬号启动第一行代码", "subtitle": "Python 星球探险记", "unit": "01-Python基础入门", "project": "探险员名片生成器", "concepts": ["VS Code 三个区域", ".py 文件", "print() 输出", "字符串和引号", "input() 输入", "变量保存信息"], "modules": [{"id": "cover", "navTitle": "封面", "pages": [{"type": "cover", "title": "登上柠檬号启动第一行代码", "subtitle": "用 Python3 做出自己的探险员名片。"}]}, {"id": "goal", "navTitle": "本课目标", "pages": [{"type": "text", "title": "今天要完成什么？", "text": "做一个文字版“探险员名片生成器”。", "note": "这不是只打印 Hello World，而是完成一个能提问、能记住答案、能输出名片的小项目。"}, {"type": "flow", "title": "学习路线", "text": "", "nodes": [{"title": "看效果", "text": "先看最终名片"}, {"title": "学知识", "text": "文件、输出、文字、输入、变量"}, {"title": "做项目", "text": "改成自己的探险员名片"}]}]}, {"id": "showcase", "navTitle": "最终作品展示", "pages": [{"type": "code", "title": "探险员名片生成器", "code": "name = input(\"请输入你的名字：\")\nage = input(\"请输入你的年龄：\")\nhobby = input(\"请输入你的爱好：\")\ncolor = input(\"请输入你喜欢的颜色：\")\ndream = input(\"请输入你的梦想职业：\")\n\nprint(\"====================\")\nprint(\"      探险员名片\")\nprint(\"====================\")\nprint(\"姓名：\" + name)\nprint(\"年龄：\" + age)\nprint(\"爱好：\" + hobby)\nprint(\"喜欢的颜色：\" + color)\nprint(\"梦想职业：\" + dream)\nprint(\"====================\")\nprint(\"欢迎登上柠檬号，\" + name + \"！\")", "output": "请输入你的名字：小明\n请输入你的年龄：9\n请输入你的爱好：画画\n请输入你喜欢的颜色：蓝色\n请输入你的梦想职业：科学家\n====================\n      探险员名片\n====================\n姓名：小明\n年龄：9\n爱好：画画\n喜欢的颜色：蓝色\n梦想职业：科学家\n====================\n欢迎登上柠檬号，小明！", "explain": "程序会连续提问 5 次，再把答案拼成一张文字名片。", "practice": "把示例输入换成自己的信息。"}]}, {"id": "map", "navTitle": "知识地图", "pages": [{"type": "mindmap", "title": "这些知识为什么要学？", "center": "探险员名片生成器", "branches": ["`.py 文件`：保存 Python 程序", "`input()`：收集姓名、年龄、爱好", "变量：像小盒子一样保存答案", "字符串：保存普通文字", "`print()`：输出文字名片"], "text": "所有知识点都服务于同一个作品。"}]}, {"id": "review", "navTitle": "复习预热", "pages": [{"type": "table", "title": "我们使用 Python3", "text": "", "headers": ["问题", "孩子能记住的说法"], "rows": [["Python3 是什么", "今天使用的 Python 版本，就像新版飞船系统。"], [".py 文件是什么", "Python 程序通常保存在 `.py` 文件里。"], ["代码符号", "括号、引号、冒号尽量使用英文状态。"]]}, {"type": "flow", "title": "写程序的三个动作", "text": "", "nodes": [{"title": "写代码", "text": "在编辑区输入 Python"}, {"title": "运行", "text": "让电脑执行代码"}, {"title": "看结果", "text": "在终端检查输出"}]}]}, {"id": "concept-vscode", "navTitle": "知识点 1：VS Code 的三个区域", "pages": [{"type": "text", "title": "它解决什么问题？", "text": "知道在哪里写代码、在哪里运行、在哪里看结果。", "note": ""}, {"type": "table", "title": "三个区域", "text": "", "headers": ["区域", "作用", "课堂动作"], "rows": [["文件区", "找到 `.py` 文件", "打开今天的程序"], ["编辑区", "写 Python 代码", "输入 print 和 input"], ["终端区", "看运行结果", "检查名片输出"]]}, {"type": "flow", "title": "最小操作流程", "text": "", "nodes": [{"title": "打开文件", "text": "找到 `.py`"}, {"title": "写代码", "text": "在编辑区输入"}, {"title": "运行", "text": "点击运行并看终端"}]}], "kind": "concept", "isFunction": false}, {"id": "concept-py-file", "navTitle": "知识点 2：.py 文件", "pages": [{"type": "text", "title": ".py 文件是什么？", "text": "`.py` 是 Python 程序的常见文件后缀。", "note": "看到 `card.py`，就可以把它理解成“Python 代码本”。"}, {"type": "table", "title": ".py 文件小地图", "text": "", "headers": ["文件名", "Python 怎么看", "适合做什么"], "rows": [["`card.py`", "一个 Python 程序文件", "写探险员名片"], ["`game.py`", "一个 Python 程序文件", "写小游戏"], ["`note.txt`", "普通文本文件", "不直接当 Python 程序运行"]]}, {"type": "code", "title": "最小 .py 程序", "code": "print(\"柠檬号启动\")", "output": "柠檬号启动", "explain": "把这一行放进 `.py` 文件，运行后终端会显示文字。", "practice": "把文件保存成 `card.py`，再运行一次。"}], "kind": "concept", "isFunction": false}, {"id": "concept-print", "navTitle": "知识点 3：print() 输出", "pages": [{"type": "text", "title": "它解决什么问题？", "text": "让程序把内容显示到终端，就像飞船广播。", "note": ""}, {"type": "code", "title": "最短代码", "code": "print(\"柠檬号启动\")", "output": "柠檬号启动", "explain": "print() 会把括号里的内容显示出来。", "practice": "把文字改成你的名字。"}, {"type": "flow", "title": "代码到结果", "text": "", "nodes": [{"title": "代码", "text": "print(\"你好\")"}, {"title": "执行", "text": "Python 读取括号里的文字"}, {"title": "输出", "text": "终端显示：你好"}]}, {"type": "table", "title": "print() 常见写法", "text": "", "headers": ["写法", "作用", "常见错误"], "rows": [["`print(\"你好\")`", "输出普通文字", "文字忘记加引号"], ["`print(name)`", "输出变量里的内容", "把变量名误写成字符串"]]}], "kind": "concept", "isFunction": true}, {"id": "concept-string", "navTitle": "知识点 4：字符串和引号", "pages": [{"type": "text", "title": "它解决什么问题？", "text": "告诉 Python：这些内容是普通文字，不是变量名。", "note": ""}, {"type": "table", "title": "有引号 / 没引号", "text": "", "headers": ["写法", "Python 怎么理解", "是否适合初学者"], "rows": [["`\"你好\"`", "普通文字", "正确"], ["`你好`", "变量名", "容易报错"], ["`\"name\"`", "文字 name", "不会读取变量"], ["`name`", "变量 name 的内容", "变量存在时正确"]]}, {"type": "code", "title": "最短代码", "code": "message = \"欢迎登上柠檬号\"\nprint(message)", "output": "欢迎登上柠檬号", "explain": "引号里的内容会被当成文字保存。", "practice": "把欢迎语改成自己的口号。"}], "kind": "concept", "isFunction": false}, {"id": "concept-input", "navTitle": "知识点 5：input() 输入", "pages": [{"type": "text", "title": "它解决什么问题？", "text": "input() 像程序向你提问题，你回答后，程序会把答案带回来。", "note": ""}, {"type": "code", "title": "最短代码", "code": "name = input(\"请输入你的名字：\")\nprint(\"欢迎你，\" + name)", "output": "请输入你的名字：小明\n欢迎你，小明", "explain": "input() 返回用户输入的字符串，通常要用变量接住。", "practice": "把提示语改成“探险员姓名：”。"}, {"type": "flow", "title": "输入-保存-输出", "text": "", "nodes": [{"title": "用户输入", "text": "小明"}, {"title": "程序保存", "text": "name = \"小明\""}, {"title": "print 输出", "text": "欢迎你，小明"}]}, {"type": "table", "title": "input() 重要提醒", "text": "", "headers": ["写法", "作用", "容易错"], "rows": [["`input(\"姓名：\")`", "显示提示并等待输入", "没有变量接住答案"], ["`name = input(\"姓名：\")`", "把答案保存到 name", "输入数字也先是字符串"]]}], "kind": "concept", "isFunction": true}, {"id": "concept-variable", "navTitle": "知识点 6：变量保存信息", "pages": [{"type": "text", "title": "变量像什么？", "text": "变量就像贴了名字的小盒子，盒子里可以放文字，也可以以后再拿出来用。", "note": ""}, {"type": "table", "title": "变量盒子模型", "text": "", "headers": ["变量名", "盒子里放什么", "来自哪里"], "rows": [["`name`", "\"小明\"", "input() 的回答"], ["`hobby`", "\"画画\"", "input() 的回答"], ["`dream`", "\"科学家\"", "input() 的回答"]]}, {"type": "code", "title": "变量最小例子", "code": "name = \"小明\"\nprint(\"探险员：\" + name)", "output": "探险员：小明", "explain": "`=` 在这里是赋值，意思是把右边的内容放进左边的小盒子。", "practice": "把 `name` 里的文字换成你的名字。"}], "kind": "concept", "isFunction": false}, {"id": "project-breakdown", "navTitle": "项目拆解", "pages": [{"type": "table", "title": "项目分成三步", "text": "", "headers": ["步骤", "输入", "处理", "输出"], "rows": [["收集信息", "姓名、年龄、爱好、颜色、职业", "用 input() 保存到变量", "变量里有数据"], ["整理名片", "变量和固定文字", "用 + 拼接文字", "形成每一行内容"], ["展示名片", "每一行内容", "多次 print()", "终端显示完整名片"]]}, {"type": "flow", "title": "输入 → 处理 → 输出", "text": "", "nodes": [{"title": "输入", "text": "5 个问题"}, {"title": "处理", "text": "变量保存并拼接"}, {"title": "输出", "text": "打印文字名片"}]}, {"type": "code", "title": "第 1 步：收集信息", "code": "name = input(\"请输入你的名字：\")\nage = input(\"请输入你的年龄：\")\nhobby = input(\"请输入你的爱好：\")\ncolor = input(\"请输入你喜欢的颜色：\")\ndream = input(\"请输入你的梦想职业：\")", "output": "程序连续提问 5 次。", "explain": "先把所有回答保存起来。", "practice": "给问题加上你喜欢的提示语。"}]}, {"id": "full-code", "navTitle": "完整代码", "pages": [{"type": "code", "title": "探险员名片生成器完整代码", "code": "name = input(\"请输入你的名字：\")\nage = input(\"请输入你的年龄：\")\nhobby = input(\"请输入你的爱好：\")\ncolor = input(\"请输入你喜欢的颜色：\")\ndream = input(\"请输入你的梦想职业：\")\n\nprint(\"====================\")\nprint(\"      探险员名片\")\nprint(\"====================\")\nprint(\"姓名：\" + name)\nprint(\"年龄：\" + age)\nprint(\"爱好：\" + hobby)\nprint(\"喜欢的颜色：\" + color)\nprint(\"梦想职业：\" + dream)\nprint(\"====================\")\nprint(\"欢迎登上柠檬号，\" + name + \"！\")", "output": "请输入你的名字：小明\n请输入你的年龄：9\n请输入你的爱好：画画\n请输入你喜欢的颜色：蓝色\n请输入你的梦想职业：科学家\n====================\n      探险员名片\n====================\n姓名：小明\n年龄：9\n爱好：画画\n喜欢的颜色：蓝色\n梦想职业：科学家\n====================\n欢迎登上柠檬号，小明！", "explain": "复制到 PyCharm 或 VS Code 可以直接运行。", "practice": "增加“最想去的星球”。"}]}, {"id": "interactive", "navTitle": "互动实验", "pages": [{"type": "interactive", "title": "输入信息，生成探险员名片", "text": "不用写代码，先体验程序的输入和输出。"}]}, {"id": "errors", "navTitle": "常见错误", "pages": [{"type": "table", "title": "常见错误 1", "text": "", "headers": ["错误代码", "错误原因", "正确写法", "记忆口诀"], "rows": [["`print(你好)`", "Python 把 你好 当变量名", "`print(\"你好\")`", "文字穿引号衣服"], ["`pritn(\"你好\")`", "print 拼写错了", "`print(\"你好\")`", "函数名要照着写"], ["`print（\"你好\"）`", "用了中文括号", "`print(\"你好\")`", "代码符号用英文"]]}, {"type": "table", "title": "常见错误 2", "text": "", "headers": ["错误代码", "错误原因", "正确写法", "记忆口诀"], "rows": [["`input(\"姓名：\")`", "没有变量接住回答", "`name = input(\"姓名：\")`", "回答要放进盒子"], ["`print(\"name\")`", "输出文字 name", "`print(name)`", "变量名不加引号"], ["`print(\"年龄：\" + 9)`", "文字和数字不能直接拼接", "`print(\"年龄：\" + age)`", "本课 input 得到的是字符串"]]}]}, {"id": "quiz", "navTitle": "小测", "pages": [{"type": "quiz", "title": "题目 1", "question": "下面哪一行可以输出“你好”？", "options": ["print(\"你好\")", "input(\"你好\")", "name = \"你好\""], "answer": 0, "hint": "input() 是提问，print() 才是显示内容。", "correct": "答对了：print() 负责输出。"}, {"type": "quiz", "title": "题目 2", "question": "name = input(\"姓名：\") 中，name 的作用是什么？", "options": ["保存用户输入", "输出到终端", "删除文字"], "answer": 0, "hint": "等号左边的变量像小盒子，用来保存数据。", "correct": "答对了：变量 name 保存输入结果。"}, {"type": "quiz", "title": "题目 3", "question": "为什么 print(你好) 容易报错？", "options": ["你好 没有加引号", "print 不能输出中文", "括号不能出现文字"], "answer": 0, "hint": "普通文字需要写在引号里面。", "correct": "答对了：文字要加引号。"}]}, {"id": "challenge", "navTitle": "课后挑战", "pages": [{"type": "table", "title": "三档挑战", "text": "", "headers": ["难度", "任务"], "rows": [["基础版", "完成自己的探险员名片。"], ["进阶版", "增加“最喜欢的动物”和“最想去的星球”。"], ["挑战版", "输出一句个性化欢迎语：欢迎登上柠檬号，未来的科学家小明！"]]}]}], "sourceTitle": "登上柠檬号启动第一行代码"}</script>
+  <script>
+(() => {
+  const lesson = JSON.parse(document.getElementById("lesson-json").textContent);
+  let currentModuleIndex = 0;
+  let currentPageIndex = 0;
+  const storageKey = "lemon-module-lesson:" + lesson.id;
+  const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+  if (Number.isInteger(saved.currentModuleIndex)) currentModuleIndex = saved.currentModuleIndex;
+  if (Number.isInteger(saved.currentPageIndex)) currentPageIndex = saved.currentPageIndex;
+
+  const nav = document.getElementById("moduleNav");
+  const stage = document.getElementById("stage");
+  const pageCount = document.getElementById("pageCount");
+  const prevBtn = document.getElementById("prevPage");
+  const nextBtn = document.getElementById("nextPage");
+  const shell = document.querySelector(".app-shell");
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  }
+
+  function saveState() {
+    localStorage.setItem(storageKey, JSON.stringify({ currentModuleIndex, currentPageIndex }));
+  }
+
+  function renderNav() {
+    nav.innerHTML = lesson.modules.map((module, index) => `
+      <button class="nav-button" type="button" data-module="${index}" title="${escapeHtml(module.navTitle)}">
+        <span class="nav-index">${index + 1}</span>
+        <span class="nav-label">${escapeHtml(module.navTitle)}</span>
+      </button>
+    `).join("");
+    nav.querySelectorAll(".nav-button").forEach(button => {
+      button.addEventListener("click", () => goToModule(Number(button.dataset.module)));
+    });
+  }
+
+  function renderCodeBlock(code) {
+    return `<pre><code class="language-python">${escapeHtml(code)}</code></pre>`;
+  }
+
+  function renderOutputBlock(output) {
+    return `<div class="terminal">${escapeHtml(output || "运行后在终端看到结果。")}</div>`;
+  }
+
+  function renderTable(page) {
+    const headers = page.headers || [];
+    const rows = page.rows || [];
+    return `<div class="table-wrap"><table>
+      <thead><tr>${headers.map(item => `<th>${escapeHtml(item)}</th>`).join("")}</tr></thead>
+      <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${formatInline(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table></div>`;
+  }
+
+  function renderFlow(page) {
+    return `<div class="flow">${(page.nodes || []).map(node => `
+      <div class="flow-node"><b>${escapeHtml(node.title || node)}</b>${node.text ? `<span>${escapeHtml(node.text)}</span>` : ""}</div>
+    `).join("")}</div>`;
+  }
+
+  function renderMindMap(page) {
+    return `<div class="mindmap">
+      <div class="mind-center">${escapeHtml(page.center || page.title)}</div>
+      <div class="mind-branches">${(page.branches || []).map(item => `<div class="mind-branch">${formatInline(item)}</div>`).join("")}</div>
+    </div>`;
+  }
+
+  function renderQuiz(page, pageKey) {
+    return `<div class="options">${(page.options || []).map((option, index) => `
+      <button class="option-btn" type="button" data-answer="${index}" data-key="${pageKey}">${String.fromCharCode(65 + index)}. ${escapeHtml(option)}</button>
+    `).join("")}</div><div class="feedback" id="feedback-${pageKey}" aria-live="polite"></div>`;
+  }
+
+  function renderInteractiveDemo(page) {
+    if (lesson.id === "lesson-001") {
+      return `<div class="input-grid">
+        <label>姓名<input id="demoName" value="小明"></label>
+        <label>年龄<input id="demoAge" value="9"></label>
+        <label>爱好<input id="demoHobby" value="画画"></label>
+        <label>喜欢的颜色<input id="demoColor" value="蓝色"></label>
+        <label>梦想职业<input id="demoDream" value="科学家"></label>
+      </div>
+      <button class="primary-btn" type="button" id="makeCard">生成探险员名片</button>
+      <div class="terminal" id="demoOutput">点击按钮后，这里会生成文字名片。</div>`;
+    }
+    return `<div class="input-grid"><label>输入内容<input id="genericInput" value="${escapeHtml(lesson.title)}"></label></div>
+      <button class="primary-btn" type="button" id="genericRun">运行实验</button>
+      <div class="terminal" id="genericOutput">点击按钮后，这里显示结果。</div>`;
+  }
+
+  function formatInline(value) {
+    const text = escapeHtml(value);
+    return text.replace(/`([^`]+)`/g, "<code>$1</code>");
+  }
+
+  function renderCurrentPage() {
+    const module = lesson.modules[currentModuleIndex];
+    currentPageIndex = Math.max(0, Math.min(currentPageIndex, module.pages.length - 1));
+    const page = module.pages[currentPageIndex];
+    const pageKey = `${currentModuleIndex}-${currentPageIndex}`;
+    let body = "";
+    if (page.type === "cover") {
+      body = `<div class="hero-grid"><article><p class="eyebrow">${escapeHtml(lesson.subtitle)}</p><h1>${escapeHtml(page.title)}</h1><p class="lead">${escapeHtml(page.subtitle || "")}</p><div class="tag-row">${lesson.concepts.map(item => `<span class="tag">✅ ${escapeHtml(item)}</span>`).join("")}</div></article><div class="visual-card"><div class="big-icon">🚀</div><h2>${escapeHtml(lesson.project)}</h2><p class="note">${escapeHtml(lesson.unit)}</p></div></div>`;
+    } else if (page.type === "code") {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2>${page.text ? `<p class="note">${escapeHtml(page.text)}</p>` : ""}${renderCodeBlock(page.code || "")}${renderOutputBlock(page.output)}${page.explain ? `<p class="note">${escapeHtml(page.explain)}</p>` : ""}${page.practice ? `<div class="practice"><b>马上改一改：</b>${escapeHtml(page.practice)}</div>` : ""}`;
+    } else if (page.type === "table") {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2>${page.text ? `<p class="lead">${escapeHtml(page.text)}</p>` : ""}${renderTable(page)}`;
+    } else if (page.type === "flow") {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2>${page.text ? `<p class="lead">${escapeHtml(page.text)}</p>` : ""}${renderFlow(page)}`;
+    } else if (page.type === "mindmap") {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2>${page.text ? `<p class="lead">${escapeHtml(page.text)}</p>` : ""}${renderMindMap(page)}`;
+    } else if (page.type === "quiz") {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2><p class="lead">${escapeHtml(page.question)}</p>${renderQuiz(page, pageKey)}`;
+    } else if (page.type === "interactive") {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2><p class="lead">${escapeHtml(page.text || "")}</p>${renderInteractiveDemo(page)}`;
+    } else {
+      body = `<p class="eyebrow">${escapeHtml(module.navTitle)}</p><h2>${escapeHtml(page.title)}</h2>${page.text ? `<p class="lead">${escapeHtml(page.text)}</p>` : ""}${page.note ? `<p class="note">${escapeHtml(page.note)}</p>` : ""}${page.items ? `<div class="tag-row">${page.items.map(item => `<span class="tag">${escapeHtml(item)}</span>`).join("")}</div>` : ""}`;
+    }
+    stage.innerHTML = `<div class="page">${body}</div>`;
+    bindPageEvents(page, pageKey);
+    updateProgress();
+    saveState();
+  }
+
+  function bindPageEvents(page, pageKey) {
+    stage.querySelectorAll("[data-answer]").forEach(button => {
+      button.addEventListener("click", () => {
+        const picked = Number(button.dataset.answer);
+        const box = document.getElementById(`feedback-${pageKey}`);
+        if (picked === page.answer) {
+          box.textContent = page.correct || "答对了，继续下一页。";
+          box.style.color = "var(--green)";
+        } else {
+          box.textContent = page.hint || "再想一想这个知识点的作用。";
+          box.style.color = "var(--red)";
+        }
+      });
+    });
+    document.getElementById("makeCard")?.addEventListener("click", () => {
+      const name = document.getElementById("demoName").value || "小明";
+      const age = document.getElementById("demoAge").value || "9";
+      const hobby = document.getElementById("demoHobby").value || "画画";
+      const color = document.getElementById("demoColor").value || "蓝色";
+      const dream = document.getElementById("demoDream").value || "科学家";
+      document.getElementById("demoOutput").textContent =
+`====================
+      探险员名片
+====================
+姓名：${name}
+年龄：${age}
+爱好：${hobby}
+喜欢的颜色：${color}
+梦想职业：${dream}
+====================
+欢迎登上柠檬号，${name}！`;
+    });
+    document.getElementById("genericRun")?.addEventListener("click", () => {
+      const value = document.getElementById("genericInput").value || lesson.title;
+      document.getElementById("genericOutput").textContent = `输入：${value}\n输出：程序已经处理 ${value}`;
+    });
+  }
+
+  function updateProgress() {
+    document.querySelectorAll(".nav-button").forEach((button, index) => {
+      button.setAttribute("aria-current", index === currentModuleIndex ? "true" : "false");
+    });
+    const module = lesson.modules[currentModuleIndex];
+    pageCount.textContent = `${module.navTitle}：${currentPageIndex + 1} / ${module.pages.length}`;
+    prevBtn.disabled = currentModuleIndex === 0 && currentPageIndex === 0;
+    nextBtn.disabled = currentModuleIndex === lesson.modules.length - 1 && currentPageIndex === module.pages.length - 1;
+    document.querySelectorAll(".nav-button")[currentModuleIndex]?.scrollIntoView({ block: "nearest" });
+  }
+
+  function goToModule(index) {
+    currentModuleIndex = Math.max(0, Math.min(index, lesson.modules.length - 1));
+    currentPageIndex = 0;
+    renderCurrentPage();
+  }
+
+  function goNext() {
+    const module = lesson.modules[currentModuleIndex];
+    if (currentPageIndex < module.pages.length - 1) {
+      currentPageIndex += 1;
+    } else if (currentModuleIndex < lesson.modules.length - 1) {
+      currentModuleIndex += 1;
+      currentPageIndex = 0;
+    }
+    renderCurrentPage();
+  }
+
+  function goPrev() {
+    if (currentPageIndex > 0) {
+      currentPageIndex -= 1;
+    } else if (currentModuleIndex > 0) {
+      currentModuleIndex -= 1;
+      currentPageIndex = lesson.modules[currentModuleIndex].pages.length - 1;
+    }
+    renderCurrentPage();
+  }
+
+  function validateLesson(lesson) {
+    const issues = [];
+    let pageTotal = 0;
+    lesson.modules.forEach((module, moduleIndex) => {
+      if (!module.navTitle) issues.push(`模块 ${moduleIndex + 1} 缺少 navTitle`);
+      if (!module.pages || module.pages.length === 0) issues.push(`${module.navTitle} 没有页面`);
+      pageTotal += module.pages?.length || 0;
+      (module.pages || []).forEach((page, pageIndex) => {
+        if (page.type === "code" && !page.output) issues.push(`${module.navTitle} 第 ${pageIndex + 1} 页代码缺少 output`);
+        if (page.type === "quiz" && (typeof page.answer !== "number" || !page.hint)) issues.push(`${module.navTitle} 第 ${pageIndex + 1} 题缺少答案或提示`);
+        if (page.code && /\\n(if|for|while|def|class)\\b/.test(page.code) && !/\\n    /.test(page.code)) issues.push(`${module.navTitle} 第 ${pageIndex + 1} 页代码可能缺少缩进`);
+      });
+      if (module.kind === "concept" && !module.isFunction && module.pages?.some(page => page.type === "params")) {
+        issues.push(`${module.navTitle} 是非函数知识点但出现参数页`);
+      }
+    });
+    if (!lesson.unit) issues.push("课程未归入单元");
+    if (!lesson.project) issues.push("课程缺少项目作品");
+    const htmlText = document.documentElement.outerHTML;
+    if (new RegExp("p" + "ic/").test(htmlText)) issues.push("存在课程图片引用");
+    if (new RegExp("--bg" + "-art|--character" + "-art|--mark" + "-art").test(htmlText)) issues.push("存在旧图片 CSS 变量");
+    if (new RegExp("background(?:-image)?\\\\s*:\\\\s*u" + "rl", "i").test(htmlText)) issues.push("存在背景图片引用");
+    console.group(`validateLesson: ${lesson.title}`);
+    console.log({ modules: lesson.modules.length, pages: pageTotal, issues });
+    console.groupEnd();
+    return { modules: lesson.modules.length, pages: pageTotal, issues };
+  }
+
+  document.getElementById("toggleRail").addEventListener("click", () => {
+    shell.classList.toggle("rail-collapsed");
+    const collapsed = shell.classList.contains("rail-collapsed");
+    document.getElementById("toggleRail").setAttribute("aria-expanded", String(!collapsed));
+  });
+  prevBtn.addEventListener("click", goPrev);
+  nextBtn.addEventListener("click", goNext);
+  document.addEventListener("keydown", event => {
+    const tag = document.activeElement ? document.activeElement.tagName : "";
+    if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
+    if (event.key === "ArrowLeft") goPrev();
+    if (event.key === "ArrowRight") goNext();
+  });
+
+  window.validateLesson = validateLesson;
+  renderNav();
+  currentModuleIndex = Math.max(0, Math.min(currentModuleIndex, lesson.modules.length - 1));
+  currentPageIndex = Math.max(0, Math.min(currentPageIndex, lesson.modules[currentModuleIndex].pages.length - 1));
+  renderCurrentPage();
+  validateLesson(lesson);
+})();
+</script>
+</body>
+</html>
+
