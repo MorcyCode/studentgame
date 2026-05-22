@@ -8,9 +8,376 @@
       content="柠檬创客学生作品展示入口主页，点击学生名字进入对应作品文件夹。"
     />
     <title>柠檬创客 · 学生作品星际展厅</title>
+    <style>
+      :root {
+        color: #f5f8ff;
+        background: #03040d;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-width: 320px;
+        min-height: 100%;
+        margin: 0;
+        overflow-x: hidden;
+        background: #03040d;
+      }
+
+      body {
+        color: #f5f8ff;
+        background:
+          radial-gradient(circle at 50% 18%, rgba(80, 122, 255, 0.22), transparent 34rem),
+          radial-gradient(circle at 20% 80%, rgba(47, 219, 255, 0.12), transparent 24rem),
+          linear-gradient(180deg, #03040d 0%, #06091b 48%, #02030a 100%);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      #static-background {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .static-shell {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: min(1180px, calc(100% - 32px));
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 64px 0 34px;
+        text-align: center;
+        animation: staticFade 900ms ease both;
+      }
+
+      .static-title {
+        max-width: 980px;
+        margin: 0 auto;
+        color: transparent;
+        font-size: clamp(2.18rem, 7vw, 5.8rem);
+        font-weight: 900;
+        line-height: 1.04;
+        letter-spacing: 0;
+        background: linear-gradient(94deg, #ffffff 2%, #75efff 34%, #a88cff 64%, #ffffff 98%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-shadow:
+          0 0 28px rgba(67, 228, 255, 0.34),
+          0 0 62px rgba(151, 105, 255, 0.24);
+      }
+
+      .static-subtitle {
+        max-width: 760px;
+        margin: clamp(16px, 3vw, 24px) auto clamp(34px, 7vw, 76px);
+        color: rgba(229, 241, 255, 0.86);
+        font-size: clamp(1.05rem, 2.3vw, 1.48rem);
+        font-weight: 500;
+        line-height: 1.65;
+        text-shadow: 0 0 18px rgba(64, 216, 255, 0.24);
+      }
+
+      .static-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(18px, 3vw, 30px);
+        width: min(980px, 100%);
+        margin: 0 auto;
+        perspective: 1200px;
+      }
+
+      .static-card {
+        position: relative;
+        display: grid;
+        min-height: clamp(136px, 19vw, 178px);
+        padding: 28px 22px;
+        place-items: center;
+        overflow: hidden;
+        color: #f7fbff;
+        text-decoration: none;
+        border: 1px solid rgba(112, 226, 255, 0.56);
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(81, 229, 255, 0.16), rgba(155, 90, 255, 0.12)),
+          rgba(9, 14, 39, 0.52);
+        box-shadow:
+          inset 0 0 42px rgba(74, 224, 255, 0.08),
+          0 18px 55px rgba(0, 0, 0, 0.38);
+        backdrop-filter: blur(18px);
+        animation: staticCard 720ms cubic-bezier(0.2, 0.72, 0.2, 1) both;
+        animation-delay: var(--delay);
+        transition:
+          transform 240ms ease,
+          border-color 240ms ease,
+          box-shadow 240ms ease;
+      }
+
+      .static-card::before {
+        position: absolute;
+        width: 118px;
+        height: 118px;
+        content: "";
+        border: 1px solid rgba(118, 235, 255, 0.44);
+        border-radius: 50%;
+        box-shadow:
+          0 0 26px rgba(76, 228, 255, 0.28),
+          inset 0 0 22px rgba(157, 115, 255, 0.2);
+        opacity: 0.45;
+        transform: rotateX(72deg) translateY(16px);
+      }
+
+      .static-card::after {
+        position: absolute;
+        inset: 18%;
+        content: "";
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(75, 229, 255, 0.34), rgba(157, 115, 255, 0.18) 36%, transparent 72%);
+        filter: blur(18px);
+        opacity: 0;
+        transform: scale(0.68);
+        transition:
+          opacity 260ms ease,
+          transform 260ms ease;
+      }
+
+      .static-card:hover,
+      .static-card:focus-visible {
+        border-color: rgba(155, 246, 255, 0.95);
+        box-shadow:
+          inset 0 0 54px rgba(74, 224, 255, 0.16),
+          0 26px 70px rgba(0, 0, 0, 0.46),
+          0 0 34px rgba(70, 225, 255, 0.42),
+          0 0 72px rgba(157, 115, 255, 0.32);
+        transform: translateY(-8px) scale(1.02);
+      }
+
+      .static-card:hover::after,
+      .static-card:focus-visible::after {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .static-card span {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(2rem, 4.6vw, 3.35rem);
+        font-weight: 850;
+        line-height: 1;
+        text-shadow:
+          0 0 14px rgba(69, 228, 255, 0.48),
+          0 0 32px rgba(157, 115, 255, 0.36);
+      }
+
+      .static-footer {
+        margin-top: auto;
+        padding-top: clamp(28px, 6vw, 52px);
+        color: rgba(205, 222, 255, 0.62);
+        font-size: 0.95rem;
+        text-shadow: 0 0 12px rgba(69, 228, 255, 0.24);
+      }
+
+      @keyframes staticFade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes staticCard {
+        from {
+          opacity: 0;
+          transform: translateY(22px) rotateX(7deg);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) rotateX(0deg);
+        }
+      }
+
+      @media (min-width: 1080px) {
+        .static-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 820px) {
+        .static-shell {
+          width: min(720px, calc(100% - 28px));
+          padding-top: 48px;
+        }
+
+        .static-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        .static-shell {
+          width: min(430px, calc(100% - 24px));
+          justify-content: flex-start;
+          padding-top: 44px;
+        }
+
+        .static-title {
+          font-size: clamp(2.05rem, 11vw, 3.15rem);
+          line-height: 1.12;
+        }
+
+        .static-subtitle {
+          margin-bottom: 30px;
+          font-size: 1rem;
+        }
+
+        .static-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .static-card {
+          min-height: 126px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <canvas id="static-background" aria-hidden="true"></canvas>
+    <div id="root">
+      <main class="static-shell">
+        <section aria-labelledby="static-title">
+          <h1 class="static-title" id="static-title">柠檬创客 · 学生作品星际展厅</h1>
+          <p class="static-subtitle">每一个孩子，都是正在发光的小小创造者</p>
+          <div class="static-grid" aria-label="学生作品入口">
+            <a class="static-card" href="/hank/" style="--delay: 180ms"><span>Hank</span></a>
+            <a class="static-card" href="/mavis/" style="--delay: 270ms"><span>Mavis</span></a>
+            <a class="static-card" href="/qiu/" style="--delay: 360ms"><span>Qiu</span></a>
+            <a class="static-card" href="/seven/" style="--delay: 450ms"><span>Seven</span></a>
+            <a class="static-card" href="/wang/" style="--delay: 540ms"><span>Wang</span></a>
+          </div>
+        </section>
+        <footer class="static-footer">Powered by Lemon Maker Coding School</footer>
+      </main>
+    </div>
+    <script>
+      (() => {
+        const canvas = document.getElementById("static-background");
+        const ctx = canvas.getContext("2d");
+        const pointer = { x: 0, y: 0 };
+        let stars = [];
+        let animationId = 0;
+
+        const resize = () => {
+          const ratio = Math.min(window.devicePixelRatio || 1, 1.7);
+          canvas.width = Math.floor(window.innerWidth * ratio);
+          canvas.height = Math.floor(window.innerHeight * ratio);
+          canvas.style.width = `${window.innerWidth}px`;
+          canvas.style.height = `${window.innerHeight}px`;
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          stars = Array.from({ length: window.innerWidth < 680 ? 95 : 150 }, () => ({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            z: 0.35 + Math.random() * 1.2,
+            r: 0.55 + Math.random() * 1.55,
+            a: 0.25 + Math.random() * 0.7,
+          }));
+        };
+
+        const draw = (time) => {
+          if (!document.body.contains(canvas)) {
+            window.cancelAnimationFrame(animationId);
+            return;
+          }
+
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+          ctx.clearRect(0, 0, width, height);
+
+          const bg = ctx.createLinearGradient(0, 0, 0, height);
+          bg.addColorStop(0, "#03040d");
+          bg.addColorStop(0.48, "#06091b");
+          bg.addColorStop(1, "#02030a");
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, width, height);
+
+          const glow = ctx.createRadialGradient(width * 0.5, height * 0.18, 0, width * 0.5, height * 0.18, width * 0.55);
+          glow.addColorStop(0, "rgba(82, 216, 255, 0.18)");
+          glow.addColorStop(0.45, "rgba(154, 107, 255, 0.12)");
+          glow.addColorStop(1, "rgba(3, 4, 13, 0)");
+          ctx.fillStyle = glow;
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.save();
+          ctx.translate(pointer.x * 10, pointer.y * 7);
+          stars.forEach((star) => {
+            const drift = (time * 0.012 * star.z) % height;
+            const y = (star.y + drift) % height;
+            ctx.beginPath();
+            ctx.arc(star.x, y, star.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${star.z > 0.85 ? "154, 107, 255" : "82, 216, 255"}, ${star.a})`;
+            ctx.fill();
+          });
+          ctx.restore();
+
+          const horizon = height * 0.43;
+          ctx.strokeStyle = "rgba(69, 228, 255, 0.16)";
+          ctx.lineWidth = 1;
+          for (let i = 0; i < 22; i += 1) {
+            const y = horizon + i * i * 0.85;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.stroke();
+          }
+
+          for (let i = -14; i <= 14; i += 1) {
+            const x = width / 2 + i * 44 + Math.sin(time * 0.0008) * 16;
+            ctx.beginPath();
+            ctx.moveTo(width / 2, horizon);
+            ctx.lineTo(x, height);
+            ctx.strokeStyle = i % 3 === 0 ? "rgba(154, 107, 255, 0.2)" : "rgba(69, 228, 255, 0.14)";
+            ctx.stroke();
+          }
+
+          animationId = window.requestAnimationFrame(draw);
+        };
+
+        window.addEventListener("resize", resize, { passive: true });
+        window.addEventListener(
+          "pointermove",
+          (event) => {
+            pointer.x = event.clientX / window.innerWidth - 0.5;
+            pointer.y = event.clientY / window.innerHeight - 0.5;
+          },
+          { passive: true },
+        );
+
+        resize();
+        animationId = window.requestAnimationFrame(draw);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
