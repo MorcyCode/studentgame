@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python循环总结：for循环与while循环</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      background: linear-gradient(135deg, #eef6ff 0%, #f8fbff 100%);
+      color: #1f2d3d;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1200px;
+      margin: 24px auto 40px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1677ff, #36cfc9);
+      color: white;
+      border-radius: 24px;
+      padding: 32px 28px;
+      box-shadow: 0 12px 30px rgba(22, 119, 255, 0.18);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 36px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.8;
+      opacity: 0.95;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 28px;
+      color: #1677ff;
+      border-left: 6px solid #1677ff;
+      padding-left: 12px;
+    }
+
+    .card h3 {
+      color: #fa8c16;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .mini-box {
+      background: #f5f9ff;
+      border-left: 5px solid #69b1ff;
+      padding: 14px 16px;
+      border-radius: 14px;
+      line-height: 1.9;
+      margin: 14px 0;
+    }
+
+    .tip {
+      background: #fff7e6;
+      border-left: 5px solid #faad14;
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin: 14px 0;
+      line-height: 1.9;
+    }
+
+    .danger {
+      background: #fff1f0;
+      border-left: 5px solid #ff4d4f;
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin: 14px 0;
+      line-height: 1.9;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e6f4ff;
+      color: #1677ff;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 14px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    code {
+      background: #eef3f8;
+      color: #c7254e;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, monospace;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e5edf7;
+      padding: 16px;
+      border-radius: 16px;
+      overflow-x: auto;
+      line-height: 1.7;
+      font-size: 15px;
+      margin: 12px 0 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    th, td {
+      border: 1px solid #dce6f2;
+      padding: 12px 10px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    th {
+      background: #e6f4ff;
+      color: #1677ff;
+      font-size: 16px;
+    }
+
+    td {
+      background: #fff;
+    }
+
+    ul {
+      line-height: 2;
+      padding-left: 22px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #1677ff;
+      color: white;
+      box-shadow: 0 6px 16px rgba(22, 119, 255, 0.2);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+    }
+
+    .secondary {
+      background: #36cfc9;
+      box-shadow: 0 6px 16px rgba(54, 207, 201, 0.18);
+    }
+
+    .danger-btn {
+      background: #ff7875;
+      box-shadow: 0 6px 16px rgba(255, 120, 117, 0.18);
+    }
+
+    .demo-panel {
+      background: #f8fbff;
+      border: 2px dashed #91caff;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 12px;
+    }
+
+    .status {
+      font-size: 17px;
+      margin: 10px 0;
+      line-height: 1.9;
+      min-height: 60px;
+    }
+
+    .highlight {
+      color: #ff4d4f;
+      font-weight: bold;
+    }
+
+    .line {
+      background: #f2f6fb;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-family: Consolas, monospace;
+      transition: all 0.2s ease;
+    }
+
+    .line.active {
+      background: #fff1b8;
+      border-left: 5px solid #faad14;
+      font-weight: bold;
+    }
+
+    .result-box {
+      background: #ffffff;
+      border: 1px solid #d9e7f7;
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 60px;
+      line-height: 1.8;
+      margin-top: 12px;
+      font-size: 16px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 20px;
+      padding-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .card h2 {
+        font-size: 24px;
+      }
+
+      .card h3 {
+        font-size: 20px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>Python 循环总结：for 与 while</h1>
+      <p>
+        这一页不仅总结知识点，还加入了
+        <strong>交互演示</strong>。点击按钮后，你可以一步一步观察
+        <strong>for 循环</strong> 和 <strong>while 循环</strong> 是怎么执行的。
+      </p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>一、什么是循环？</h2>
+        <div class="mini-box">
+          循环，就是把<strong>重复做的事情</strong>交给计算机自动完成。<br />
+          例如：重复输出数字、重复打印一句话、不断判断一个条件是否成立。
+        </div>
+
+        <span class="tag">for：适合知道次数</span>
+        <span class="tag">while：适合知道条件</span>
+
+        <h3>一句话理解</h3>
+        <ul>
+          <li><code>for</code>：按顺序一个一个取数据。</li>
+          <li><code>while</code>：只要条件成立，就一直执行。</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>二、for 循环</h2>
+
+        <h3>1. 基本格式</h3>
+        <pre>for 变量 in 可迭代对象:
+    循环体</pre>
+
+        <h3>2. 典型例子</h3>
+        <pre>for i in range(1, 6):
+    print(i)</pre>
+
+        <div class="mini-box">
+          <code>range(1, 6)</code> 生成的是：1、2、3、4、5。<br />
+          注意：<strong>不包含 6</strong>。
+        </div>
+
+        <h3>3. 常见写法</h3>
+        <pre># 输出5次“你好”
+for i in range(5):
+    print("你好")
+
+# 遍历字符串
+for ch in "python":
+    print(ch)
+
+# 遍历列表
+nums = [10, 20, 30]
+for x in nums:
+    print(x)</pre>
+
+        <div class="tip">
+          当你能数清楚“循环几次”时，优先考虑 <code>for</code>。
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>三、while 循环</h2>
+
+        <h3>1. 基本格式</h3>
+        <pre>while 条件:
+    循环体</pre>
+
+        <h3>2. 典型例子</h3>
+        <pre>i = 1
+while i &lt;= 5:
+    print(i)
+    i = i + 1</pre>
+
+        <div class="mini-box">
+          一开始 <code>i=1</code>，只要 <code>i &lt;= 5</code> 成立，就进入循环。<br />
+          每循环一次，<code>i</code> 加 1，直到条件不成立。
+        </div>
+
+        <div class="danger">
+          <strong>注意：</strong>如果你忘了修改循环变量，<code>while</code> 很容易变成
+          <span class="highlight">死循环</span>。
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>四、for 和 while 对比</h2>
+        <table>
+          <tr>
+            <th>对比项目</th>
+            <th>for 循环</th>
+            <th>while 循环</th>
+          </tr>
+          <tr>
+            <td>适合什么情况</td>
+            <td>知道循环次数</td>
+            <td>知道循环条件</td>
+          </tr>
+          <tr>
+            <td>常见用途</td>
+            <td>遍历 range、列表、字符串</td>
+            <td>反复判断、持续执行、输入验证</td>
+          </tr>
+          <tr>
+            <td>是否容易死循环</td>
+            <td>一般不容易</td>
+            <td>比较容易</td>
+          </tr>
+          <tr>
+            <td>初学者建议</td>
+            <td>优先熟练掌握</td>
+            <td>理解条件变化后再强化</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>五、循环里的两个重要关键词</h2>
+
+        <h3>1. break：直接结束整个循环</h3>
+        <pre>for i in range(1, 10):
+    if i == 5:
+        break
+    print(i)</pre>
+
+        <h3>2. continue：结束本次，继续下一次</h3>
+        <pre>for i in range(1, 6):
+    if i == 3:
+        continue
+    print(i)</pre>
+      </section>
+
+      <section class="card">
+        <h2>六、交互演示：for 循环</h2>
+        <div class="mini-box">
+          例子：用 <code>for i in range(1, 6)</code> 输出 1 到 5。<br />
+          点击“下一步”，看看程序是怎么一轮一轮执行的。
+        </div>
+
+        <div class="demo-panel">
+          <div id="for-code">
+            <div class="line" data-line="1">for i in range(1, 6):</div>
+            <div class="line" data-line="2">    print(i)</div>
+          </div>
+
+          <div class="btn-row">
+            <button onclick="nextForStep()">下一步</button>
+            <button class="secondary" onclick="autoRunFor()">自动演示</button>
+            <button class="danger-btn" onclick="resetForDemo()">重置</button>
+          </div>
+
+          <div class="status" id="for-status">点击“下一步”开始观察 for 循环执行过程。</div>
+          <div class="result-box" id="for-result">输出结果：暂无</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>七、交互演示：while 循环</h2>
+        <div class="mini-box">
+          例子：用 <code>while i &lt;= 5</code> 输出 1 到 5。<br />
+          注意观察：每轮循环后，变量 <code>i</code> 都会变化。
+        </div>
+
+        <div class="demo-panel">
+          <div id="while-code">
+            <div class="line" data-line="1">i = 1</div>
+            <div class="line" data-line="2">while i &lt;= 5:</div>
+            <div class="line" data-line="3">    print(i)</div>
+            <div class="line" data-line="4">    i = i + 1</div>
+          </div>
+
+          <div class="btn-row">
+            <button onclick="nextWhileStep()">下一步</button>
+            <button class="secondary" onclick="autoRunWhile()">自动演示</button>
+            <button class="danger-btn" onclick="resetWhileDemo()">重置</button>
+          </div>
+
+          <div class="status" id="while-status">点击“下一步”开始观察 while 循环执行过程。</div>
+          <div class="result-box" id="while-result">输出结果：暂无</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>八、最容易出错的地方</h2>
+        <ul>
+          <li>把 <code>range(1, 6)</code> 误以为包含 6。</li>
+          <li><code>while</code> 循环忘记写 <code>i = i + 1</code>。</li>
+          <li>缩进不正确，导致循环体不对。</li>
+          <li>不清楚什么时候该用 <code>for</code>，什么时候该用 <code>while</code>。</li>
+        </ul>
+
+        <div class="tip">
+          记忆口诀：<br />
+          <strong>能数清次数用 for，只看条件变化用 while。</strong>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>九、最后总结</h2>
+        <div class="mini-box">
+          <strong>for 循环：</strong>适合遍历，适合已知次数。<br />
+          <strong>while 循环：</strong>适合按条件反复执行。<br /><br />
+          这两个循环是 Python 中解决“重复问题”的核心工具。
+        </div>
+
+        <pre># for循环
+for i in range(1, 6):
+    print(i)
+
+print("------")
+
+# while循环
+j = 1
+while j &lt;= 5:
+    print(j)
+    j += 1</pre>
+      </section>
+    </div>
+
+    <div class="footer">
+      Python基础知识课件 ｜ for循环 与 while循环 交互版
+    </div>
+  </div>
+
+  <script>
+    // ====== for 演示 ======
+    const forValues = [1, 2, 3, 4, 5];
+    let forStep = 0;
+    let forOutput = [];
+    let forTimer = null;
+
+    function clearActive(containerId) {
+      const lines = document.querySelectorAll(`#${containerId} .line`);
+      lines.forEach(line => line.classList.remove("active"));
+    }
+
+    function activeLine(containerId, lineNo) {
+      clearActive(containerId);
+      const line = document.querySelector(`#${containerId} .line[data-line="${lineNo}"]`);
+      if (line) line.classList.add("active");
+    }
+
+    function updateForResult() {
+      document.getElementById("for-result").innerHTML =
+        "输出结果：" + (forOutput.length ? forOutput.join("、") : "暂无");
+    }
+
+    function nextForStep() {
+      if (forStep >= forValues.length * 2 + 1) return;
+
+      const status = document.getElementById("for-status");
+
+      if (forStep === forValues.length * 2) {
+        clearActive("for-code");
+        status.innerHTML = "for 循环结束：<strong>range(1, 6)</strong> 中的数据已经全部取完。";
+        forStep++;
+        return;
+      }
+
+      const round = Math.floor(forStep / 2);
+      const isPrintStep = forStep % 2 === 1;
+      const current = forValues[round];
+
+      if (!isPrintStep) {
+        activeLine("for-code", 1);
+        status.innerHTML = `第 ${round + 1} 轮：从 <code>range(1, 6)</code> 中取出当前值 <strong>${current}</strong>，赋给变量 <code>i</code>。`;
+      } else {
+        activeLine("for-code", 2);
+        forOutput.push(current);
+        status.innerHTML = `执行 <code>print(i)</code>，输出了 <strong>${current}</strong>。`;
+        updateForResult();
+      }
+
+      forStep++;
+    }
+
+    function resetForDemo() {
+      forStep = 0;
+      forOutput = [];
+      clearActive("for-code");
+      updateForResult();
+      document.getElementById("for-status").innerHTML = "点击“下一步”开始观察 for 循环执行过程。";
+      clearInterval(forTimer);
+    }
+
+    function autoRunFor() {
+      clearInterval(forTimer);
+      forTimer = setInterval(() => {
+        if (forStep > forValues.length * 2) {
+          clearInterval(forTimer);
+          return;
+        }
+        nextForStep();
+      }, 900);
+    }
+
+    // ====== while 演示 ======
+    let whileI = 1;
+    let whilePhase = 0;
+    let whileOutput = [];
+    let whileFinished = false;
+    let whileTimer = null;
+
+    function updateWhileResult() {
+      document.getElementById("while-result").innerHTML =
+        "输出结果：" + (whileOutput.length ? whileOutput.join("、") : "暂无");
+    }
+
+    function nextWhileStep() {
+      const status = document.getElementById("while-status");
+      if (whileFinished) return;
+
+      if (whilePhase === 0) {
+        activeLine("while-code", 1);
+        status.innerHTML = `先执行 <code>i = 1</code>，所以现在变量 <code>i</code> 的值是 <strong>${whileI}</strong>。`;
+        whilePhase = 1;
+        return;
+      }
+
+      if (whilePhase === 1) {
+        activeLine("while-code", 2);
+        if (whileI <= 5) {
+          status.innerHTML = `判断条件：<code>${whileI} <= 5</code>，条件成立，进入循环。`;
+          whilePhase = 2;
+        } else {
+          clearActive("while-code");
+          status.innerHTML = `判断条件：<code>${whileI} <= 5</code>，条件不成立，while 循环结束。`;
+          whileFinished = true;
+        }
+        return;
+      }
+
+      if (whilePhase === 2) {
+        activeLine("while-code", 3);
+        whileOutput.push(whileI);
+        status.innerHTML = `执行 <code>print(i)</code>，输出了 <strong>${whileI}</strong>。`;
+        updateWhileResult();
+        whilePhase = 3;
+        return;
+      }
+
+      if (whilePhase === 3) {
+        activeLine("while-code", 4);
+        whileI++;
+        status.innerHTML = `执行 <code>i = i + 1</code>，现在 <code>i</code> 变成了 <strong>${whileI}</strong>。`;
+        whilePhase = 1;
+      }
+    }
+
+    function resetWhileDemo() {
+      whileI = 1;
+      whilePhase = 0;
+      whileOutput = [];
+      whileFinished = false;
+      clearActive("while-code");
+      updateWhileResult();
+      document.getElementById("while-status").innerHTML = "点击“下一步”开始观察 while 循环执行过程。";
+      clearInterval(whileTimer);
+    }
+
+    function autoRunWhile() {
+      clearInterval(whileTimer);
+      whileTimer = setInterval(() => {
+        if (whileFinished) {
+          clearInterval(whileTimer);
+          return;
+        }
+        nextWhileStep();
+      }, 950);
+    }
+
+    resetForDemo();
+    resetWhileDemo();
+  </script>
+</body>
+</html>
