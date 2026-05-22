@@ -19,4 +19,8 @@ export const students = [
     name: "Wang",
     path: "/wang/",
   },
+  {
+    name: "Wrong",
+    path: "/wrong/",
+  },
 ];
