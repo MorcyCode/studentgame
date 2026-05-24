@@ -45,3 +45,4 @@ newstudent/index.html
 - `/qiu/`
 - `/seven/`
 - `/wang/`
+- `/wrong/`
